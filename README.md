@@ -81,4 +81,4 @@ This approach can be used for every format that has a converter from markdown.
 
 ##### I want a [insert esoteric format here] renderer
 Well, in that case you have to implement your own renderer.</br>
-You can look at [react-docgen-markdown-renderer](../../../OriR/react-docgen-markdown-renderer) for more details on how to do just that.
+You can look at [react-docgen-markdown-renderer](../../../../OriR/react-docgen-markdown-renderer) for more details on how to do just that.
