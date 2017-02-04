@@ -26,7 +26,15 @@ module.exports = {
       // Optional Array<Renderer>
       renderers: [new ReactDocGenMarkdownRenderer({
         componentsBasePath: process.cwd()
-      })]
+      })],
+      
+      // Optional (file, composedModule) => String
+      resolveCompose(file, composedModule) {
+        return '';
+      },
+      
+      // Optional String
+      outputPath: ''
     })
   ]
 };
@@ -46,6 +54,14 @@ The `extension` represents the file extension that this renderer emits.</br>
 The `render(file, content) => String` function is in charge of rendering the documentation according to the given component file path and content.</br>
 The default value for `renderers` is `[new ReactDocGenMarkdownRenderer({ componentsBasePath: process.cwd() })]` which emits a markdown documentation.
 
+##### resolveCompose `(file, composedModule) => String`
+This property is optional.</br>
+In case you're composing components but have aliases or using third party components.</br>
+This returns the absolute path to the composed module or `undefined` if this module can't be composed for some reason.</br>
+
+##### outputPath `String`
+This property is optional.</br>
+In case you want to output the documentation to a location other than the config.output.path directory.</br>
 
 ### FAQ
 ##### I want an HTML documentation
@@ -81,4 +97,4 @@ This approach can be used for every format that has a converter from markdown.
 
 ##### I want a [insert esoteric format here] renderer
 Well, in that case you have to implement your own renderer.</br>
-You can look at [react-docgen-markdown-renderer](../../../../OriR/react-docgen-markdown-renderer) for more details on how to do just that.
+You can look at [react-docgen-markdown-renderer](https://github.com/OriR/react-docgen-markdown-renderer) for more details on how to do just that.
