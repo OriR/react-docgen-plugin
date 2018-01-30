@@ -53,7 +53,7 @@ ReactDocGenPlugin.prototype.apply = function (compiler) {
           return allComposed;
         }
 
-        const composedFile = files.find((file) => file.indexOf(composedPath) >= 0);
+        const composedFile = files.find((file) => path.dirname(file) === composedPath);
 
 
         if(!composedFile || !loaded[composedFile]){
