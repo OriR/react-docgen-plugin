@@ -10,7 +10,9 @@ const ReactDocGenMarkdownRenderer = require('react-docgen-markdown-renderer');
 function ReactDocGenPlugin(options) {
   this.options = Object.assign({}, {
     outputPath: '',
-    renderers: [new ReactDocGenMarkdownRenderer({componentsBasePath: process.cwd()})],
+    addons: [],
+    resolver: reactDocgen.resolver.findExportedComponentDefinition,
+    renderers: [new ReactDocGenMarkdownRenderer(Object.assign({}, { componentsBasePath: process.cwd() }))],
     resolveCompose(file, composingModule) {
       return path.resolve(path.dirname(file), composingModule);
     }
@@ -19,6 +21,15 @@ function ReactDocGenPlugin(options) {
   if (!this.options.include) {
     throw new Error('ReactDocGenPlugin must get an `include` property. See documentation for more details.');
   }
+
+  this.options.renderers.forEach(renderer => {
+    renderer.compile({
+      handlebarsPlugins: this.options.addons.map(addon => addon.handlebarsPlugin),
+      typePartials: this.options.addons.reduce((partials, addon) => Object.assign(partials, addon.getTypePartials(renderer.extension)), {})
+    });
+  });
+
+  this.handlers = reactDocgen.defaultHandlers.concat(this.options.addons.reduce((handlers, addon) => handlers.concat(addon.handlers), []));
 }
 
 ReactDocGenPlugin.prototype.apply = function (compiler) {
@@ -53,7 +64,7 @@ ReactDocGenPlugin.prototype.apply = function (compiler) {
           return allComposed;
         }
 
-        const composedFile = files.find((file) => path.dirname(file) === composedPath);
+        const composedFile = files.find((file) =>file === composedPath);
 
 
         if(!composedFile || !loaded[composedFile]){
@@ -96,14 +107,15 @@ ReactDocGenPlugin.prototype.apply = function (compiler) {
       // Read the original asset to generate documentation for (it's probably cached)
       this.inputFileSystem.readFile(file, function (err, componentContent) {
         try {
-          loaded[file] = reactDocgen.parse(componentContent);
+          loaded[file] = reactDocgen.parse(componentContent, self.options.resolver, self.handlers);
           loaded[file].componentName = path.basename(file, path.extname(file));
         }
         catch(e){
           throw new Error(`
           An error has while generating documentation for ${file} in react-docgen.
           The internal error is
-          ${e.message}`);
+          ${e.message}
+          ${e.stack}`);
         }
 
         // Check if this is the last file that we've read, after it we can safely let webpack know that we're done

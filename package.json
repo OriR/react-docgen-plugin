@@ -1,6 +1,6 @@
 {
   "name": "react-docgen-plugin",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Webpack plugin to generate React components documentation",
   "main": "index.js",
   "scripts": {
@@ -20,8 +20,7 @@
   "author": "Ori Riner",
   "license": "ISC",
   "dependencies": {
-    "handlebars": "4.0.6",
-    "react-docgen": "2.14.0",
-    "react-docgen-markdown-renderer": "1.0.1"
+    "react-docgen": "^2.20.0",
+    "react-docgen-markdown-renderer": "^2.0.0"
   }
 }

@@ -34,7 +34,10 @@ module.exports = {
       },
       
       // Optional String
-      outputPath: ''
+      outputPath: '',
+
+      // Optional Array<Addon>
+      addons: []
     })
   ]
 };
@@ -63,8 +66,26 @@ This returns the absolute path to the composed module or `undefined` if this mod
 This property is optional.</br>
 In case you want to output the documentation to a location other than the config.output.path directory.</br>
 
+##### addons `Array<Addon>`
+This property is optional.</br>
+In case there's a custom logic you want to add both to the renderers you're using **and** `react-docgen` you're probably gonna use this.
+Addons are a powerful way to enhance the basic functionality of this plugin.
+This package comes with an advanced composition plugin, appropriately called, `AdvancedComposeAddon`.
+It allows for more advanced composition detection like `prop: PropTypes.shape(MyComponent.propTypes)` and more.
+To use it simply add the following:
+```js
+const AdvancedComposeAddon = require('react-docgen-plugin/addons/AdvancedComposeAddon');
+...
+new ReactDocGenPlugin({
+  addons: [new AdvancedComposeAddon()],
+  ...
+})
+```
+And now it can detect many types of compositions in your prop types!
+The reason it's not configured by default is it that adds a lot of overhead during the documentation parsing stage.
+
 ### FAQ
-##### I want an HTML documentation
+#### I want an HTML documentation
 You can implement your own renderer, but you can use this neat trick instead:
 ```javascript
 var MDToHTMLConverter  = require('showdown').Converter;
@@ -95,6 +116,29 @@ module.exports = {
 And Voila! you've just created an HTML renderer :)</br>
 This approach can be used for every format that has a converter from markdown.
 
-##### I want a [insert esoteric format here] renderer
+#### I want a [insert esoteric format here] renderer
 Well, in that case you have to implement your own renderer.</br>
 You can look at [react-docgen-markdown-renderer](https://github.com/OriR/react-docgen-markdown-renderer) for more details on how to do just that.
+
+#### I want to create an addon
+Nice!
+Addons are really powerful and allow you to customize everything with relative ease.
+An addon has a few methods (`getTypePartials`, `handlebarsPlugin`) and a `handlers` property.
+Let's start with `handlers`.
+This property will be passed to [`react-docgen`](https://github.com/reactjs/react-docgen#parsesource--resolver--handlers) as custom handlers.
+You can write your own or import an existing handler, it doesn't matter, as long as it does the job.
+You can look at the source of [`advancedComposesHandler.js`](./addons/AdvancedComposeAddon/advancedComposesHandler.js) to get a sense of how it should look.
+
+Next up is `handlebarsPlugin`.
+Since we're gonna have custom handlers for `react-docgen` we might need a way to represent them in the templating engine.
+When writing custom renderers, this assumes that you'll always use `handlebars`(hence the name `handlebarsPlugin`) to render the output string.
+Though a bit limiting, `handlebars` is extremely versatile, that's why I chose it as the templating engine.
+So `handlebarsPlugin` takes in a `handlebars` instance and returns it. This allows you to configure it in anyway you want!
+
+Now we can talk about `getTypePartials`.
+It gets an extension and returns a hash-map object of the partials relevant for it.
+Each key is a react propType or a custom type made by your custom `react-docgen` handler.
+If you don't have anything special for all extensions (regardless of the renderer), you can just return the same object.
+
+It's recommended to extend `Addon` from `react-docgen/addons/Addon` but it's not mandatory,
+you can just implement `getTypePartials`, `handlebarsPlugin` and `handlers` and you're good to go!
