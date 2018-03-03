@@ -75,7 +75,14 @@ ReactDocGenPlugin.prototype.apply = function (compiler) {
 
         // In case we're deeply composing
         if(loaded[composedFile].composes) {
-          allComposed.push(...getComposes(composedFile).map((ast) => Object.assign({}, ast, {
+          const compositions = getComposes(composedFile);
+
+          const remainingCompositions = compositions.filter((ast, index) => {
+            return !allComposed.find(existingAst => existingAst.componentName === ast.componentName)
+              || compositions.findIndex(ast2 => ast2.componentName === ast.componentName) !== index
+          });
+
+          allComposed.push(...remainingCompositions.map((ast) => Object.assign({}, ast, {
             componentName: loaded[composedFile].componentName + '.' + ast.componentName
           })));
         }
