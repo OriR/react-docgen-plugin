@@ -6,24 +6,21 @@ class AdvancedComposeAddon extends Addon {
     super([advancedComposesHandler]);
   }
 
-  handlebarsPlugin(handlebars) {
-    handlebars.registerHelper('withoutPropTypes', (context) => {
-      const originalValue = context.type
-        ? context.type.value
-        : context.value;
+  getHandlebarsPlugin({ extension }) {
+    return (handlebars) => {
+      handlebars.registerPartial('composes', '{{withoutPropTypes this}} Props');
+      handlebars.registerHelper('withoutPropTypes', (context) => {
+        const originalValue = context.type
+          ? context.type.value
+          : context.value;
 
-      return originalValue
-        ? originalValue.replace(/\.propTypes/, '')
-        : context.raw;
-    });
+        return originalValue
+          ? originalValue.replace(/\.propTypes/, '')
+          : context.raw;
+      });
 
-    return handlebars;
-  }
-
-  getTypePartials(extension) {
-    return {
-      composes: '{{withoutPropTypes this}} Props'
-    };
+      return handlebars;
+    }
   }
 }
 

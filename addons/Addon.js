@@ -1,13 +1,9 @@
 module.exports = class Addon {
-  constructor(handlers) {
-    this.handlers = handlers;
+  constructor(reactDocgenCustomHandlers) {
+    this.reactDocgenCustomHandlers = reactDocgenCustomHandlers || [];
   }
 
-  getTypePartials(extension) {
-    throw new Error(`${this.constructor.name} doesn't implement getTypePartials.`);
-  }
-
-  handlebarsPlugin(handlebars) {
-    throw new Error(`${this.constructor.name} doesn't implement handlebarsPlugins.`);
+  getHandlebarsPlugin({ extension }) {
+    throw new Error(`${this.constructor.name} doesn't implement getHandlebarsPlugin.`);
   }
 };

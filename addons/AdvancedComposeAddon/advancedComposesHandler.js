@@ -1,3 +1,5 @@
+// Majority of this code taken from `react-docgen`
+// Added handling of 'composes' type for more complex compositions.
 const {
   utils: {
     getMemberValuePath,

@@ -1,6 +1,7 @@
 const path = require('path');
 const process = require('process');
 const reactDocgen = require('react-docgen');
+const handlebars = require('handlebars');
 const ReactDocGenMarkdownRenderer = require('react-docgen-markdown-renderer');
 
 /**
@@ -23,13 +24,13 @@ function ReactDocGenPlugin(options) {
   }
 
   this.options.renderers.forEach(renderer => {
-    renderer.compile({
-      handlebarsPlugins: this.options.addons.map(addon => addon.handlebarsPlugin),
-      typePartials: this.options.addons.reduce((partials, addon) => Object.assign(partials, addon.getTypePartials(renderer.extension)), {})
-    });
+    renderer.compile(handlebars.create(),
+      {
+        handlebarsPlugins: this.options.addons.map(addon => addon.getHandlebarsPlugin(renderer.extension))
+      });
   });
 
-  this.handlers = reactDocgen.defaultHandlers.concat(this.options.addons.reduce((handlers, addon) => handlers.concat(addon.handlers), []));
+  this.handlers = reactDocgen.defaultHandlers.concat(this.options.addons.reduce((handlers, addon) => [...handlers, ...addon.reactDocgenCustomHandlers], []));
 }
 
 ReactDocGenPlugin.prototype.apply = function (compiler) {
