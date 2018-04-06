@@ -133,7 +133,7 @@ Next up is `getHandlebarsPlugin`.
 Since we're gonna have custom handlers for `react-docgen` we might need a way to represent them in the templating engine.
 When writing custom renderers, this assumes that you'll always use `handlebars`(hence the name `getHandlebarsPlugin`) to render the output string.
 Though a bit limiting, `handlebars` is extremely versatile, that's why it was chosen as the templating engine.
-So `getHandlebarsPlugin` takes in an extension of a renderer and returns a handlebars plugin function.
+So `getHandlebarsPlugin` takes in an options object, this object has an extension property of a renderer and returns a handlebars plugin function.
 That function takes in a `handlebars` instance and returns it. This allows you to configure it in anyway you want!
 You can look at the source of [`AdvancedComposeAddon.js`](./addons/AdvancedComposeAddon/AdvancedComposeAddon.js) for reference.
 
