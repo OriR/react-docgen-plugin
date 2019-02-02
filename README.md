@@ -46,27 +46,40 @@ module.exports = {
 By default `react-docgen-plugin` will use `react-docgen-markdown-renderer` with the above configuration.</br>
 
 #### options
-##### include `(resource) => Boolean | RegExp`
+**include `(resource) => Boolean | RegExp`**
 This property is mandatory.</br>
 Either a predicate or a RegExp to match every resource with. Documentation will only be generated to resources that have been matched. 
 
-##### renderers `Array<Renderer>`
+**renderers `Array<Renderer>`**
 This property is optional.</br>
 An array of `Renderer` objects. A `Renderer` is an object that consists of an `extension` property and a `render(file, content) => String` function.</br>
 The `extension` represents the file extension that this renderer emits.</br>
 The `render(file, content) => String` function is in charge of rendering the documentation according to the given component file path and content.</br>
 The default value for `renderers` is `[new ReactDocGenMarkdownRenderer({ componentsBasePath: process.cwd() })]` which emits a markdown documentation.
 
-##### resolveCompose `(file, composedModule) => String`
+**resolveCompose `(file, composedModule) => String`**
 This property is optional.</br>
 In case you're composing components but have aliases or using third party components.</br>
 This returns the absolute path to the composed module or `undefined` if this module can't be composed for some reason.</br>
 
-##### outputPath `String`
+**outputPath `String`**
 This property is optional.</br>
 In case you want to output the documentation to a location other than the config.output.path directory.</br>
 
-##### addons `Array<Addon>`
+**isComposingComponent `Function`**
+A function that determines whether or not a component composes another component.
+The function signiture is `({ composingFile, composedFile, composingFileDisplayName, composedFileDisplayName }, defaultIsComposingComponent: Function) => bool`.
+`composingFile` - The react-docgen object of the composing file.</br>
+`composedFile` - The react-docgen object of the composed file.</br>
+`composingFileDisplayName` - The display name of the component (component name) from the composing file.</br>
+`composedFileDisplayName` - The display name of the component (component name) from the composed file.</br>
+`defaultIsComposingComponent` - The default implementation of `isComposingComponent`.
+
+**resolver `Resolver`**
+An optional resolver, it will be supplied to `react-docgen`, see the [docs about resolvers](https://github.com/reactjs/react-docgen#resolver). </br>
+Defaults to `reactDocgen.resolver.findExportedComponentDefinition`.
+
+**addons `Array<Addon>`**
 This property is optional.</br>
 In case there's a custom logic you want to add both to the renderers you're using **and** `react-docgen` you're probably gonna use this.
 Addons are a powerful way to enhance the basic functionality of this plugin.
@@ -96,8 +109,8 @@ class MyHTMLRenderer {
     this.extension = '.html';
   }
   
-  render(file, content) {
-    return new MDToHTMLConverter().makeHTML(this.mdRenderer(file, content));
+  render(...args) {
+    return new MDToHTMLConverter().makeHTML(this.mdRenderer(..args));
   }
 }
 
