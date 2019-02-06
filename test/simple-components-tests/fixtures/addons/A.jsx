@@ -11,6 +11,17 @@ export default class A extends Component {
   }
 }
 
+A.customShape = {
+  /**
+   * Custom shape with id
+   */
+  id: PropTypes.number,
+  /**
+   * Custom shape with title
+   */
+  title: PropTypes.string
+}
+
 A.propTypes = {
   /**
    * Some number prop
@@ -20,4 +31,8 @@ A.propTypes = {
    * Some required function prop
    */
   func: PropTypes.func.isRequired,
+  /**
+   * My shape
+   */
+  shape: PropTypes.shape(A.customShape)
 };

@@ -27,6 +27,14 @@ B.propTypes = {
    */
   specificA: PropTypes.shape({ ...A.propTypes }),
   /**
+   * inner prop from A
+   */
+  innerAProp: A.propTypes.func,
+  /**
+   * Array of A custom shape.
+   */
+  aCustomShape: PropTypes.arrayOf(PropTypes.shape(A.customShape)),
+  /**
    * Union type
    */
   union: PropTypes.oneOf(['ABC', '123', 'Doe-Re-Mi']).isRequired,
@@ -73,6 +81,6 @@ B.propTypes = {
   custom: () => true,
   customArrayOf: PropTypes.arrayOf(() => true),
   customObjectOf: PropTypes.objectOf(() => true),
-  customArrayOf1: PropTypes.arrayOf(Date),
-  customObjectOf1: PropTypes.objectOf(Date)
+  customArrayOf1: PropTypes.arrayOf(PropTypes.instanceOf(Date)),
+  customObjectOf1: PropTypes.objectOf(PropTypes.instanceOf(Date))
 };

@@ -144,8 +144,8 @@ lab.experiment('generate docs', () => {
         entry: './test/simple-components-tests/fixtures/resolver/index.jsx',
         resolver: reactDocgen.resolver.findAllExportedComponentDefinitions,
         isComposingComponent: (options, defaultIsComposingComponent) => {
-          const { displayName, composingFile } = options;
-          if (composingFile.endsWith('E.jsx') && (displayName === 'A' || displayName === 'B')) {
+          const { composedComponentDisplayName, composingFile } = options;
+          if (composingFile.endsWith('E.jsx') && (composedComponentDisplayName === 'A' || composedComponentDisplayName === 'B')) {
             return true;
           } else {
             return defaultIsComposingComponent(options);
@@ -180,7 +180,11 @@ lab.experiment('generate docs', () => {
         include: (resource) => resource.includes('/fixtures/addons/') & !resource.endsWith('index.jsx')
       }), (err, stats) => {
         Object.entries(stats.compilation.assets).forEach(([key, value]) => {
-          console.log(value.source());
+          if (key.includes('B.md')) {
+            expect(value.source()).to.equal("## B\n\nprop | type | default | required | description\n---- | :----: | :-------: | :--------: | -----------\n**aCustomShape** | `Array[]<A.customShape Props>` |  | :x: | Array of A custom shape.\n**arrayOfA** | `Array[]<A Props>` |  | :x: | Array of A.\n**boolean** | `Boolean` | `true` | :x: | Boolean\n**custom** | `(custom validator)` |  | :x: | \n**customArrayOf** | `Array[]<(custom validator)>` |  | :x: | \n**customArrayOf1** | `Array[]<Date>` |  | :x: | \n**customObjectOf** | `Object[#]<(custom validator)>` |  | :x: | \n**customObjectOf1** | `Object[#]<Date>` |  | :x: | \n**element** | `ReactElement` |  | :x: | \n**func** | `Function` | `() => console.log(1)` | :x: | \n**highly** | `Array[]<Shape>` |  | :x: | \n**highly[].generic** | `Union<String\\|Function\\|Object[#]<Array[]<Shape>>>` |  | :x: | \n**highly[].generic<1>** | `String` |  | :x: | \n**highly[].generic<2>** | `Function` |  | :x: | \n**highly[].generic<3>** | `Object[#]<Array[]<Shape>>` |  | :x: | \n**highly[].generic<3>[#][].index** | `Number` |  | :x: | Some very nested index\n**highly[].generic<3>[#][].render** | `Function` |  | :x: | Some other function, nested\n**innerAProp** | `(custom validator)` |  | :x: | inner prop from A\n**instanceDate** | `Date` |  | :x: | Custom Date\n**nodeType** | `ReactNode` |  | :x: | \n**object** | `Object` |  | :x: | \n**objectOf** | `Object[#]<String>` |  | :white_check_mark: | Weird object\n**specificA** | `{ ...A } Props` |  | :x: | Specific A prop shape\n**typeOf** | `Union<Number\\|String>` |  | :x: | \n**typeOf<1>** | `Number` |  | :x: | \n**typeOf<2>** | `String` |  | :x: | \n**union** | `Enum('ABC', '123', 'Doe-Re-Mi')` | `'ABC'` | :x: | Union type\n**whatever** | `*` |  | :x: | Something else\n\n\nB gets more `propTypes` from these composed components\n#### A\n\nprop | type | default | required | description\n---- | :----: | :-------: | :--------: | -----------\n**func** | `Function` |  | :white_check_mark: | Some required function prop\n**index** | `Number` |  | :x: | Some number prop\n**shape** | `Shape (A.customShape)` |  | :x: | My shape\n**shape.id** | `Number` |  | :x: | Custom shape with id\n**shape.title** | `String` |  | :x: | Custom shape with title\n")
+          } else if (key.includes('A.md')) {
+            expect(value.source()).to.equal("## A\n\nprop | type | default | required | description\n---- | :----: | :-------: | :--------: | -----------\n**func** | `Function` |  | :white_check_mark: | Some required function prop\n**index** | `Number` |  | :x: | Some number prop\n**shape** | `Shape (A.customShape)` |  | :x: | My shape\n**shape.id** | `Number` |  | :x: | Custom shape with id\n**shape.title** | `String` |  | :x: | Custom shape with title\n\n");
+          }
         });
         resolve();
       });
