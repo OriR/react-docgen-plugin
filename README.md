@@ -71,8 +71,8 @@ A function that determines whether or not a component composes another component
 The function signiture is `({ composingFile, composedFile, composingFileDisplayName, composedFileDisplayName }, defaultIsComposingComponent: Function) => bool`.
 `composingFile` - The react-docgen object of the composing file.</br>
 `composedFile` - The react-docgen object of the composed file.</br>
-`composingFileDisplayName` - The display name of the component (component name) from the composing file.</br>
-`composedFileDisplayName` - The display name of the component (component name) from the composed file.</br>
+`composingFilePath` - The path of the composing file.</br>
+`composedFilePath` - The path of the composed file.</br>
 `defaultIsComposingComponent` - The default implementation of `isComposingComponent`.
 
 **resolver `Resolver`**
