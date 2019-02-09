@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types';
-import A from 'A.jsx';
+import A from './A.jsx';
 
 export default class C extends Component {
   render() {

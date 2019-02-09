@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import B from 'B.jsx';
-import E from 'E.jsx';
+import B from './B.jsx';
+import E from './E.jsx';
 
 export default class D extends Component {
   render() {
