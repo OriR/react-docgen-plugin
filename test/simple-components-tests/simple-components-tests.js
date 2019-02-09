@@ -144,8 +144,8 @@ lab.experiment('generate docs', () => {
         entry: './test/simple-components-tests/fixtures/resolver/index.jsx',
         resolver: reactDocgen.resolver.findAllExportedComponentDefinitions,
         isComposingComponent: (options, defaultIsComposingComponent) => {
-          const { composedComponentDisplayName, composingFile } = options;
-          if (composingFile.endsWith('E.jsx') && (composedComponentDisplayName === 'A' || composedComponentDisplayName === 'B')) {
+          const { composedFile, composingFilePath } = options;
+          if (composingFilePath.endsWith('E.jsx') && (composedFile.displayName === 'A' || composedFile.displayName === 'B')) {
             return true;
           } else {
             return defaultIsComposingComponent(options);
