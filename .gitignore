@@ -1,5 +1,9 @@
-# Webstorm
+# IDE
 .idea/
+.vscode
+
+# Tests
+coverage.html
 
 # Node
 node_modules/
