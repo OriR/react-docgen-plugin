@@ -1,0 +1,15 @@
+# IDE
+.idea/
+.vscode
+
+# Tests
+coverage.html
+test
+.labrc.js
+
+# Node
+node_modules/
+
+# Dev
+.prettierrc
+.lintstagedrc
