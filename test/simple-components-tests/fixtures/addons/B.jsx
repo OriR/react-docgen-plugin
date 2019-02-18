@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import A from './A.jsx';
+import { customShape } from './customTypes.jsx';
 
 export default class B extends Component {
   render() {
@@ -11,6 +12,9 @@ export default class B extends Component {
     )
   }
 }
+
+const customType = () => true;
+
 B.defaultProps = {
   boolean: true,
   func: () => console.log(1),
@@ -18,6 +22,14 @@ B.defaultProps = {
 };
 
 B.propTypes = {
+  /**
+   * Complex type composed from non-component.
+   */
+  maybeArrayOf: PropTypes.oneOfType([customShape, PropTypes.arrayOf(customShape)]),
+  /**
+   * Shapy shape
+   */
+  customTypeShape: customShape,
   /**
    * Array of A.
    */
@@ -78,9 +90,9 @@ B.propTypes = {
       }).isRequired)),
     ]),
   })),
-  custom: () => true,
-  customArrayOf: PropTypes.arrayOf(() => true),
-  customObjectOf: PropTypes.objectOf(() => true),
+  custom: customType,
+  customArrayOf: PropTypes.arrayOf(customType),
+  customObjectOf: PropTypes.objectOf(customType),
   customArrayOf1: PropTypes.arrayOf(PropTypes.instanceOf(Date)),
   customObjectOf1: PropTypes.objectOf(PropTypes.instanceOf(Date))
 };
